@@ -3,7 +3,7 @@
     <VCard>
       <VCardItem>
         <VCardTitle>Campaign Detail</VCardTitle>
-        <template #append>
+        <template v-if="isAdminOrTeamLeader()" #append>
           <ActionButton 
             class="mr-2"
             menuTitle="Assign" 
@@ -76,6 +76,7 @@ import ManualAssign2 from "@/components/campaigns/assign/ManualAssign2.vue";
 import ListWithFilter from "@/components/campaigns/list/ListWithFilter.vue";
 import AccumulateList from "@/components/campaigns/statistics/AccumulateList.vue";
 import DateAccumulateList from "@/components/campaigns/statistics/DateAccumulateList.vue";
+import { isAdminOrTeamLeader } from "@/plugins/auth";
 
 const assignList = [
   {

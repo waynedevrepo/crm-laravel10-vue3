@@ -37,10 +37,23 @@ class UserController extends Controller
     public function getLeaders()
     {
         $leaders = User::where([
-            "role" => UserRole::TEAM_LEADER->value
+            "role" => 'Team Leader'
         ])->get();
 
-        Log::info($leaders);
+        return response()->json([
+            "status" => "success",
+            "leaders" => $leaders
+        ]);
+    }
+
+    public function getAgents(Request $request)
+    {
+        $user = $request->user();
+
+        $leaders = User::where([
+            "role" => 'Agent',
+            "team_leader" => $user->id
+        ])->get();
 
         return response()->json([
             "status" => "success",
@@ -53,11 +66,11 @@ class UserController extends Controller
         $request->validate([
             'username' => 'required|string',
             'password' => 'required|string',
-            'role' =>  ['required', new Enum(UserRole::class)],
-            'status' => ['required', new Enum(UserStatus::class)],
+            'role' =>  'required',
+            'status' => 'required',
         ]);
 
-        if ($request->role == UserRole::AGENT) {
+        if ($request->role == 'Agent') {
             $request->validate([
                 'team_leader' => 'required|integer',
             ]);
@@ -89,11 +102,11 @@ class UserController extends Controller
         $request->validate([
             'id' => 'required',
             'username' => 'required|string',
-            'role' =>  ['required', new Enum(UserRole::class)],
-            'status' => ['required', new Enum(UserStatus::class)],
+            'role' =>  'required',
+            'status' => 'required',
         ]);
 
-        if ($request->role == UserRole::AGENT) {
+        if ($request->role == 'Agent') {
             $request->validate([
                 'team_leader' => 'required|integer',
             ]);
@@ -123,9 +136,9 @@ class UserController extends Controller
     public function activate(Request $request, $id)
     {
         $user = User::find($id);
-        $user->status = $user->status == UserStatus::ACTIVE ?
-            UserStatus::INACTIVE->value :
-            UserStatus::ACTIVE->value;
+        $user->status = $user->status == 'active' ?
+            'inactive' :
+            'active';
 
         $user->save();
 
@@ -155,9 +168,9 @@ class UserController extends Controller
     {
         $me = Auth::user();
         $filter = [];
-        if ($me->role != UserRole::ADMIN)
+        if ($me->role != 'Admin')
             $filter = [
-                'role' => UserRole::AGENT->value
+                'role' => 'Agent'
             ];
 
         $users = User::where($filter)->get();

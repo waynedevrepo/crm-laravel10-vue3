@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('campaign_details', function (Blueprint $table) {
             $table->id();
             $table->integer('campaign_id');
+            $table->integer('assigned_leader')->nullable();
             $table->integer('assigned_user')->nullable();
             $table->text('progressStatus')->nullable();
             $table->text('progressSubStatus')->nullable();

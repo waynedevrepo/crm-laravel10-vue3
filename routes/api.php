@@ -31,6 +31,7 @@ Route::group(['prefix' => 'auth'], function () {
 Route::group(['prefix' => 'users', 'middleware' => 'auth:sanctum'], function () {
     Route::get('/', [UserController::class, 'get']);
     Route::get('/leaders', [UserController::class, 'getLeaders']);
+    Route::get('/agents', [UserController::class, 'getAgents']);
     Route::get('/{id}', [UserController::class, 'show']);
 
     Route::post('/', [UserController::class, 'store']);
@@ -77,3 +78,5 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:sanctum'], function () 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/placeholder-pwd', [AuthController::class, 'genPassword']);

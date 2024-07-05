@@ -13,7 +13,6 @@ const emit = defineEmits([
 const currentFilter = ref("Default");
 
 const setFilter = (label, sitem) => {
-    console.log(label, sitem)
     emit('set-filter', {
         status: label, 
         sub_status: sitem

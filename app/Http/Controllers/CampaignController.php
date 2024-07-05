@@ -150,20 +150,28 @@ class CampaignController extends Controller
 
     public function getCampaignDetail(Request $request, $id)
     {
+        $user = $request->user();
+
         $status = $request->status;
         $sub_status = $request->sub_status;
         $where = [
             'campaign_id' => $id
         ];
 
+        if ($user->role == 'Team Leader')
+            $where['assigned_leader'] = $user->id;
+
+        if ($user->role == 'Agent')
+            $where['assigned_user'] = $user->id;
+
         $counts = CampaignDetail::selectRaw('progressStatus, count(*) as count')
-            ->where('campaign_id', $id)
+            ->where($where)
             ->groupBy('progressStatus')
             ->get()
             ->toArray();
 
         $counts2 = CampaignDetail::selectRaw('progressStatus, progressSubStatus, count(*) as count')
-            ->where('campaign_id', $id)
+            ->where($where)
             ->groupBy('progressStatus', 'progressSubStatus')
             ->get()
             ->toArray();
@@ -190,8 +198,20 @@ class CampaignController extends Controller
 
     public function getUnassignedCount(Request $request, $id)
     {
-        $all = CampaignDetail::where('campaign_id', $id)->count();
-        $unassigned = CampaignDetail::where('campaign_id', $id)->whereNull('assigned_user')->count();
+        $user = $request->user();
+
+        if ($user->role == 'Admin') {
+            $all = CampaignDetail::where('campaign_id', $id)->count();
+            $unassigned = CampaignDetail::where('campaign_id', $id)->whereNull('assigned_leader')->count();
+        } else {
+            $where = [
+                'campaign_id' => $id,
+                'assigned_leader' => $user->id
+            ];
+            $all = CampaignDetail::where($where)->count();
+
+            $unassigned = CampaignDetail::where($where)->whereNull('assigned_user')->count();
+        }
 
         return response()->json([
             "status" => "success",
@@ -202,25 +222,51 @@ class CampaignController extends Controller
 
     public function assign(Request $request, $id)
     {
+        $user = $request->user();
+        $isAdmin = $user->role == 'Admin';
+
         $request->validate([
             "leader" => 'required',
             "method" => 'required',
             "amount" => 'required'
         ]);
 
-        if ($request->method == 'Normal')
-            CampaignDetail::whereNull('assigned_user')
-                ->limit($request->amount)
-                ->update([
-                    'assigned_user' => $request->leader
-                ]);
-        else
-            CampaignDetail::whereNull('assigned_user')
-                ->inRandomOrder()
-                ->limit($request->amount)
-                ->update([
-                    'assigned_user' => $request->leader
-                ]);
+        $where = [
+            'campaign_id' => $id,
+            'assigned_leader' => $user->id
+        ];
+
+        if ($request->method == 'Normal') {
+            if ($isAdmin)
+                CampaignDetail::where(['campaign_id' => $id])
+                    ->whereNull('assigned_leader')
+                    ->limit($request->amount)
+                    ->update([
+                        'assigned_leader' => $request->leader
+                    ]);
+            else
+                CampaignDetail::where($where)
+                    ->limit($request->amount)
+                    ->update([
+                        'assigned_user' => $request->leader
+                    ]);
+        } else {
+            if ($isAdmin)
+                CampaignDetail::where(['campaign_id' => $id])
+                    ->whereNull('assigned_leader')
+                    ->inRandomOrder()
+                    ->limit($request->amount)
+                    ->update([
+                        'assigned_leader' => $request->leader
+                    ]);
+            else
+                CampaignDetail::where($where)
+                    ->limit($request->amount)
+                    ->inRandomOrder()
+                    ->update([
+                        'assigned_user' => $request->leader
+                    ]);
+        }
 
         return response()->json([
             "status" => "success"
@@ -244,9 +290,9 @@ class CampaignController extends Controller
     public function activateCampaign(Request $request, $id)
     {
         $campaign = Campaign::find($id);
-        $campaign->status = $campaign->status == UserStatus::ACTIVE ?
-            UserStatus::INACTIVE->value :
-            UserStatus::ACTIVE->value;
+        $campaign->status = $campaign->status == 'active' ?
+            'inactive' :
+            'active';
 
         $campaign->save();
         $campaigns = $this->_allCampaigns();

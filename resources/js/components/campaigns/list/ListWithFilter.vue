@@ -45,7 +45,7 @@ const getCampaignDetailList = () => {
 }
 
 const setFilter = (filter) => {
-  if (status.value != filter.status && sub_status.value != filter.sub_status) {
+  if (status.value != filter.status || sub_status.value != filter.sub_status) {
     status.value = filter.status
     sub_status.value = filter.sub_status
     getCampaignDetailList()
@@ -65,6 +65,9 @@ onMounted(() => {
           :status = "status"
           :sub_status="sub_status"
           @set-filter="setFilter" />
-        <FilteredList :data="dataList"/>
+
+        <FilteredList 
+          class="mt-2" 
+          :data="dataList"/>
     </div>
 </template>

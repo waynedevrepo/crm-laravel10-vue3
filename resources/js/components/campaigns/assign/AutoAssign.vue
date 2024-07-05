@@ -1,4 +1,5 @@
 <script setup>
+import { isAdmin } from '@/plugins/auth';
 import axios from '@axios';
 
 const available = ref(0)
@@ -58,13 +59,15 @@ const applyAutoAssign = () => {
 }
 
 const getLeadersList = () => {
-    axios.get('/users/leaders')
+    const url = isAdmin() ? '/users/leaders' : '/users/agents'
+    
+    axios.get(url)
         .then(res => {
             const { leaders } = res.data
             leadersList.value = leaders.map(leader => {
                 return {
                     value: leader.id, 
-                    title: leader.name
+                    title: leader.username
                 }
             })
         })
@@ -77,7 +80,7 @@ const getUnassignedCount = () => {
             available.value = unassigned_count
             total.value = total_count
             if (total_count != 0)
-                availablePercent.value = (total_count - unassigned_count) * 100 / total_count
+                availablePercent.value = unassigned_count * 100 / total_count
         })
 }
 
