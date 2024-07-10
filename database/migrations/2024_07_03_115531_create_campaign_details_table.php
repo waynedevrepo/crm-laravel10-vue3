@@ -16,6 +16,7 @@ return new class extends Migration
             $table->integer('campaign_id');
             $table->integer('assigned_leader')->nullable();
             $table->integer('assigned_user')->nullable();
+            $table->text('ref_no')->nullable();
             $table->text('progressStatus')->nullable();
             $table->text('progressSubStatus')->nullable();
             $table->text('campaignAgentRemark')->nullable();

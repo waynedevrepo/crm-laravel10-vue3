@@ -231,6 +231,22 @@ class CampaignController extends Controller
         ]);
     }
 
+    public function updateCampaignDetailRefNumber(Request $request, $id)
+    {
+        $request->validate([
+            "ref_no" => 'required',
+        ]);
+
+        $campaign_detail = CampaignDetail::find($id);
+        $campaign_detail->ref_no = $request->ref_no;
+
+        $campaign_detail->save();
+
+        return response()->json([
+            "status" => "success",
+        ]);
+    }
+
     public function getCampaignDetailInfo($id)
     {
         $campaign_detail = CampaignDetail::find($id);
