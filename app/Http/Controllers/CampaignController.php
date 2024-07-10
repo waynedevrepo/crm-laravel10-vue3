@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserRole;
 use App\Enums\UserStatus;
 use App\Models\Campaign;
 use App\Models\CampaignDetail;
@@ -141,10 +142,12 @@ class CampaignController extends Controller
         } else {
             return response()->json(['error' => 'File was not uploaded correctly'], 400);
         }
-        $chunkSize = 100; // Adjust the chunk size as needed
+
+        $chunkSize = 100;
         collect($data)->chunk($chunkSize)->each(function ($chunk) {
             CampaignDetail::insert($chunk->toArray());
         });
+
         return response()->json(['message' => 'Files uploaded and data inserted successfully']);
     }
 
@@ -154,14 +157,17 @@ class CampaignController extends Controller
 
         $status = $request->status;
         $sub_status = $request->sub_status;
+        $start_date = $request->start_date;
+        $end_date = $request->end_date;
+
         $where = [
             'campaign_id' => $id
         ];
 
-        if ($user->role == 'Team Leader')
+        if ($user->role == UserRole::TEAM_LEADER)
             $where['assigned_leader'] = $user->id;
 
-        if ($user->role == 'Agent')
+        if ($user->role == UserRole::AGENT)
             $where['assigned_user'] = $user->id;
 
         $counts = CampaignDetail::selectRaw('progressStatus, count(*) as count')
@@ -187,7 +193,15 @@ class CampaignController extends Controller
         if ($sub_status != 'All')
             $where['progressSubStatus'] = $sub_status;
 
-        $list = CampaignDetail::where($where)->get();
+        $builder = CampaignDetail::where($where);
+        if (isset($start_date) && isset($end_date)) {
+            $builder = $builder->whereBetween('currentstatusdate', [
+                $start_date,
+                $end_date,
+            ]);
+        }
+
+        $list = $builder->get();
 
         return response()->json([
             "counts_status" => $counts,
@@ -196,11 +210,42 @@ class CampaignController extends Controller
         ]);
     }
 
+    public function updateCampaignDetailStatus(Request $request, $id)
+    {
+        $request->validate([
+            "progressStatus" => 'required',
+            "progressSubStatus" => 'required',
+            "campaignAgentRemark" => 'required'
+        ]);
+
+        $campaign_detail = CampaignDetail::find($id);
+        $campaign_detail->progressStatus = $request->progressStatus;
+        $campaign_detail->progressSubStatus = $request->progressSubStatus;
+        $campaign_detail->campaignAgentRemark = $request->campaignAgentRemark;
+
+        $campaign_detail->save();
+
+        return response()->json([
+            "status" => "success",
+            "campaign_detail" => $campaign_detail
+        ]);
+    }
+
+    public function getCampaignDetailInfo($id)
+    {
+        $campaign_detail = CampaignDetail::find($id);
+
+        return response()->json([
+            "status" => "success",
+            "campaign_detail" => $campaign_detail
+        ]);
+    }
+
     public function getUnassignedCount(Request $request, $id)
     {
         $user = $request->user();
 
-        if ($user->role == 'Admin') {
+        if ($user->role == UserRole::ADMIN) {
             $all = CampaignDetail::where('campaign_id', $id)->count();
             $unassigned = CampaignDetail::where('campaign_id', $id)->whereNull('assigned_leader')->count();
         } else {
@@ -223,7 +268,7 @@ class CampaignController extends Controller
     public function assign(Request $request, $id)
     {
         $user = $request->user();
-        $isAdmin = $user->role == 'Admin';
+        $isAdmin = $user->role == UserRole::ADMIN;
 
         $request->validate([
             "leader" => 'required',

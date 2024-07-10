@@ -74,6 +74,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:sanctum'], function () 
     });
 });
 
+Route::group(['prefix' => 'campaign-detail', 'middleware' => 'auth:sanctum'], function () {
+    Route::get('/{id}', [CampaignController::class, 'getCampaignDetailInfo']);
+    Route::put('/{id}', [CampaignController::class, 'updateCampaignDetailStatus']);
+});
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
