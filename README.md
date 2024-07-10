@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # vue
 
 This template should help get you started developing with Vue 3 in Vite.
@@ -33,3 +34,6 @@ npm run dev
 ```sh
 npm run build
 ```
+=======
+# crm-laravel10-vue3
+>>>>>>> 6b90a7046b24e2e25aee6eb073b9e1506e860063
