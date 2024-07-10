@@ -19,6 +19,8 @@ const name = ref('')
 const password = ref('')
 const rememberMe = ref(false)
 
+const isError = computed(() => error.value.length > 0)
+const error = ref('')
 
 const login = () => {
   axios.post('/auth/login', {
@@ -29,7 +31,9 @@ const login = () => {
 
     localStorage.setItem('userData', JSON.stringify(userData))
     localStorage.setItem('accessToken', JSON.stringify(accessToken))
-    router.replace('/')
+    router.replace('/campaigns')
+  }).catch(err => {    
+    error.value = 'Unauthorized: Please check your credentials.';
   })
 }
 
@@ -159,6 +163,14 @@ const adminLogin = () => {
             </VRow>
             
         </VCardText>
+        <VSnackbar
+          v-model="isError"
+          :timeout="1000"
+          location="top end"
+          color="error"
+        >
+          {{ error }}
+        </VSnackbar>
       </VCard>
     </VCol>
   </VRow>

@@ -20,13 +20,13 @@
                     <div
                         v-for="(item, index) in categories"
                         :key="index" 
-                        class="d-flex w-full align-center justify-between mb-2 px-2 py-2">
-                        <span 
-                            class="cursor-pointer"
+                        class="d-flex w-full align-center justify-between mb-2 px-3 pt-2">
+                        <div 
+                            class="cursor-pointer w-full"
                             :class="selected_category == item.id? 'text-success' : ''"
                             @click="showCategory(item.id)">
                             {{ item.name }}
-                        </span>
+                        </div>
                         
                         <div class="d-flex gap-1">
                             <IconBtn @click="editCategoryDialog(item)">
@@ -57,7 +57,7 @@
                     <div
                         v-for="(item, index) in categories_by_parent"
                         :key="index" 
-                        class="d-flex w-full align-center justify-between px-2 py-2">
+                        class="d-flex w-full align-center justify-between px-2 pt-2">
                         <span>
                             {{ item.name }}
                         </span>
@@ -223,10 +223,14 @@ const closeDeleteDialog = () => {
 const saveCategory = () => {
     const category = { ...editCategoryItem.value }
     const category_id = category.id
+    const parent = parentItem.value
     delete category.id
 
-    const pitem = categories_selector.value.find(item => item.value == parentItem.value)
+    if (!parent) {
+        return
+    }
 
+    const pitem = categories_selector.value.find(item => item.value == parent.value)
     if (pitem == null || pitem.value == -1) {
         delete category.parent_id
     } else {

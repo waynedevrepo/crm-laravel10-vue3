@@ -7,6 +7,10 @@ const props = defineProps({
   campaign_id: {
     type: Number,
     required: true
+  },
+  date_filter: {
+    type: String,
+    required: false
   }
 })
 
@@ -15,10 +19,23 @@ const dataList = ref([])
 const status = ref("Default")
 const sub_status = ref("")
 
-const getCampaignDetailList = () => {
+watch(props, () => {
+  if (!props.date_filter)
+    return
+
+  const [start_date, end_date] = props.date_filter.split(" to ")
+  if (start_date && end_date) {
+    getCampaignDetailList(start_date, end_date)
+  }
+})
+
+const getCampaignDetailList = (start_date, end_date) => {
+
   axios.post(`/admin/campaigns/${props.campaign_id}/detail`, {
     status: status.value,
-    sub_status: sub_status.value
+    sub_status: sub_status.value,
+    start_date, 
+    end_date 
   })
     .then(res => {
       const _filterdList = {}

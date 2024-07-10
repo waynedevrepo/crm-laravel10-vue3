@@ -11,7 +11,7 @@
 
         <VCard class="mt-4">
             <VCardItem>
-                <VCardTitle>Progress Categories List</VCardTitle>
+                <VCardTitle>Progress Status List</VCardTitle>
             </VCardItem>
             <VCardText>
                 <CategoryList baseUrl="/admin/progress-categories" />

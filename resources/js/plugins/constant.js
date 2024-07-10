@@ -59,8 +59,8 @@ const defaultCampaign = {
     company: "",
     category: "",
     sub_category: "",
-    start_date: new Date(),
-    end_date: new Date(),
+    start_date: new Date().toISOString().slice(0, 19).replace('T', ' '),
+    end_date: new Date().toISOString().slice(0, 19).replace('T', ' '),
     status: "active",
     today_sales: 0,
     total_sales: 0   
@@ -156,10 +156,44 @@ const tableHeaders = {
     ]
 }
 
+const defaultSubmitInfo = {
+    product: '',
+    package: '',
+    fullname: '',
+    passportNo: '',
+    address1: '',
+    address2: '',
+    address3: '',
+    state: '',
+    area: '',
+    postcode: '',
+    contact: '',
+    email: '',
+    citizen: '',
+    agentcode: ''
+}
+
+const submitInfoLabels = {
+    product: 'PRODUCT',
+    package: 'PACKAGE',
+    fullname: 'FULL NAME as per NRIC',
+    passportNo: 'NRIC / PASSPORT NO',
+    address1: 'ADDRESS 1',
+    address2: 'ADDRESS 2',
+    address3: 'ADDRESS 3',
+    state: 'STATE',
+    area: 'AREA',
+    postcode: 'POSTCODE',
+    contact: 'CONTACT',
+    email: 'EMAIL',
+    citizen: 'CITIZEN',
+    agentcode: 'AGENT CODE'
+}
+
 export {
     ALL,
     ROLE_ADMIN, ROLE_AGENT, ROLE_LEADER, allRoles,
-    allStatus, defaultCampaign, defaultCategory, defaultUser, filter_user_states, rolesByAdmin, rolesByManager,
-    rolesByManagerForFilter, rolesByTeamLeader, tableHeaders, tableOption, user_states
+    allStatus, defaultCampaign, defaultCategory, defaultSubmitInfo, defaultUser, filter_user_states, rolesByAdmin, rolesByManager,
+    rolesByManagerForFilter, rolesByTeamLeader, submitInfoLabels, tableHeaders, tableOption, user_states
 }
 

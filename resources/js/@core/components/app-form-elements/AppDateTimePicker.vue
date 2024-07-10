@@ -2,17 +2,17 @@
 import FlatPickr from 'vue-flatpickr-component'
 import { useTheme } from 'vuetify'
 import {
-  VField,
-  filterFieldProps,
-  makeVFieldProps,
+VField,
+filterFieldProps,
+makeVFieldProps,
 } from 'vuetify/lib/components/VField/VField'
 import {
-  VInput,
-  makeVInputProps,
+VInput,
+makeVInputProps,
 } from 'vuetify/lib/components/VInput/VInput'
 
-import { filterInputAttrs } from 'vuetify/lib/util/helpers'
 import { useThemeConfig } from '@core/composable/useThemeConfig'
+import { filterInputAttrs } from 'vuetify/lib/util/helpers'
 
 const props = defineProps({
   autofocus: Boolean,

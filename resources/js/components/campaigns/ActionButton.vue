@@ -20,7 +20,6 @@ const emit = defineEmits([
 
 const handleClick = (value) => {
     emit('update-action', value);
-    console.log(value)
 }
 
 </script>

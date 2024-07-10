@@ -2,11 +2,16 @@
 import { isAdmin } from '@/plugins/auth';
 import axios from '@axios';
 
+const emit = defineEmits([
+    'update-action'
+])
+
 const available = ref(0)
 const total = ref(0) 
 const availablePercent = ref(0)
 
 const route = useRoute()
+const router = useRouter()
 const id = parseInt(route.params.id);
 
 const error = ref('')
@@ -84,6 +89,10 @@ const getUnassignedCount = () => {
         })
 }
 
+const navigateMain = () => {
+    emit('update-action', 'list')
+}
+
 onMounted(() => {
     getLeadersList();
     getUnassignedCount();
@@ -137,6 +146,13 @@ onMounted(() => {
                     type="number"
                     v-model="amount"
                 />
+                
+                <VBtn 
+                    class="mr-4 my-4"
+                    color="error"
+                    @click="navigateMain">
+                    Return
+                </VBtn>
 
                 <VBtn 
                     class="my-4"

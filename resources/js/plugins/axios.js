@@ -4,7 +4,7 @@ import axios from 'axios'
 const axiosIns = axios.create({
 // You can add your headers here
 // ================================
-  baseURL: `http://${process.env.BACKEND_URL}/api/`,
+  baseURL: import.meta.env.VITE_BACKEND_URL,
 // timeout: 1000,
 // headers: {'X-Custom-Header': 'foobar'}
 })
@@ -33,7 +33,6 @@ axiosIns.interceptors.request.use(config => {
 axiosIns.interceptors.response.use(response => {
   return response
 }, error => {
-  console.log(error)
   // Handle error
   if (error.response.status === 401) {
     // ℹ️ Logout user and redirect to login page

@@ -82,11 +82,11 @@ const openCreateDialog = () => {
 }
 
 const closeCreateDialog = (changed) => {
-    showDialog.value = false
-    campaign.value = defaultCampaign
-    if (changed) {
-        getCampaignList();
-    }
+  showDialog.value = false
+  campaign.value = defaultCampaign
+  if (changed) {
+      getCampaignList()
+  }
 }
 
 const editCampaignDialog = (item) => {

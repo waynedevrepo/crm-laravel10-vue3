@@ -108,6 +108,7 @@ onMounted(() => {
   
   <VDialog
     v-model="isDialogVisible"
+    persistent
     max-width="720"
   >
     <!-- Dialog close btn -->

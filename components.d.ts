@@ -70,6 +70,7 @@ declare module '@vue/runtime-core' {
     ShareProjectDialog: typeof import('./resources/js/components/dialogs/ShareProjectDialog.vue')['default']
     Shortcuts: typeof import('./resources/js/@core/components/Shortcuts.vue')['default']
     StatisticsList: typeof import('./resources/js/components/campaigns/statistics/StatisticsList.vue')['default']
+    SubmitDialog: typeof import('./resources/js/components/campaign-detail/SubmitDialog.vue')['default']
     TheCustomizer: typeof import('./resources/js/@core/components/TheCustomizer.vue')['default']
     ThemeSwitcher: typeof import('./resources/js/@core/components/ThemeSwitcher.vue')['default']
     TwoFactorAuthDialog: typeof import('./resources/js/components/dialogs/TwoFactorAuthDialog.vue')['default']

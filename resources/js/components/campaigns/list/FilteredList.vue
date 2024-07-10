@@ -6,8 +6,8 @@
         :page="options.page"
         :show-select="showSelect"
         @update:options="options = $event"
+        @click:row="goToDetail"
       >
-        
         <template #bottom>
           <VCardText class="mt-8">
             <VRow>
@@ -56,7 +56,12 @@ const props = defineProps({
   }
 })
 
+const router = useRouter()
 const data = toRef(props, 'data')
 
 const options = ref(tableOption)
+
+const goToDetail = (item) => {
+  router.push(`/campaign-detail/${item.id}`)
+}
 </script>

@@ -4,51 +4,60 @@
       <VCardItem>
         <VCardTitle>Campaign Detail</VCardTitle>
         <template v-if="isAdminOrTeamLeader()" #append>
-          <ActionButton 
-            class="mr-2"
-            menuTitle="Assign" 
-            @update-action="setAction"
-            :menuList="assignList"
-          />
+          <div class="d-flex align-end justify-end">
+            <AppDateTimePicker
+              v-model="dateFilter"
+              label="Range"
+              class="mr-4"
+              :config="{ mode: 'range' }"
+            />
 
-          <ActionButton 
-            class="mr-2"
-            menuTitle="Lead Progress" 
-            @update-action="setAction"
-            :menuList="progressList" 
-          />
+            <ActionButton 
+              class="mr-2"
+              menuTitle="Assign" 
+              @update-action="setAction"
+              :menuList="assignList"
+            />
 
-          <VBtn 
-            class="mr-2"
-            color="success"
-            rounded="pill"
-            @click="() => setAction('list')">
-            Manage
-          </VBtn>
+            <ActionButton 
+              class="mr-2"
+              menuTitle="Lead Progress" 
+              @update-action="setAction"
+              :menuList="progressList" 
+            />
 
-          <VBtn 
-            color="error"
-            rounded="pill"
-            @click="() => setAction('blocking')">
-            Blocking
-          </VBtn>
+            <VBtn 
+              class="mr-2"
+              color="success"
+              rounded="pill"
+              @click="() => setAction('list')">
+              Manage
+            </VBtn>
+
+            <!-- <VBtn 
+              color="error"
+              rounded="pill"
+              @click="() => setAction('blocking')">
+              Blocking
+            </VBtn> -->
+          </div>
         </template>
       </VCardItem>
       <VCardText>
         <div v-if="action == 'auto-assign'">
-          <AutoAssign />
+          <AutoAssign @update-action="setAction"/>
         </div>
 
         <div v-if="action == 'manual-assign'">
-          <ManualAssign />
+          <ManualAssign @update-action="setAction"/>
         </div>
 
-        <div v-if="action == 'manual-assign2'">
+        <!-- <div v-if="action == 'manual-assign2'">
           <ManualAssign2 />
-        </div>
+        </div> -->
 
         <div v-if="action == 'list'">
-          <ListWithFilter :campaign_id="id"/>
+          <ListWithFilter :campaign_id="id" :date_filter="dateFilter"/>
         </div>
 
         <div v-if="action == 'accumulate'">
@@ -68,11 +77,11 @@
   </div>
 </template>
 <script setup>
+import AppDateTimePicker from "@/@core/components/app-form-elements/AppDateTimePicker.vue";
 import ActionButton from "@/components/campaigns/ActionButton.vue";
 import Blocking from "@/components/campaigns/Blocking.vue";
 import AutoAssign from "@/components/campaigns/assign/AutoAssign.vue";
 import ManualAssign from "@/components/campaigns/assign/ManualAssign.vue";
-import ManualAssign2 from "@/components/campaigns/assign/ManualAssign2.vue";
 import ListWithFilter from "@/components/campaigns/list/ListWithFilter.vue";
 import AccumulateList from "@/components/campaigns/statistics/AccumulateList.vue";
 import DateAccumulateList from "@/components/campaigns/statistics/DateAccumulateList.vue";
@@ -107,15 +116,20 @@ const progressList = [
 const route = useRoute()
 const id = parseInt(route.params.id);
 const action = ref("list")
+const dateFilter = ref()
 
 const setAction = (name) => {
   action.value = name;
 }
+
 
 </script>
 
 <style>
 .w-full {
   width: 100%;
+}
+.app-picker-field {
+  width: 250px;
 }
 </style>
