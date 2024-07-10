@@ -293,7 +293,9 @@ const submit = () => {
 
     axios.post(`${API_URL}/casecrm_submitorder.php`, postParam)
         .then(res => {
+            const data = res.data
             console.log('res', res);
+            emit('update-record', data.ref_no)
         })
 }
 

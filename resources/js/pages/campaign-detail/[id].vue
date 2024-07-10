@@ -20,6 +20,7 @@
                     cols="12" >
                     <div class="font-italic">
                         <b>Campaign Detail ID:</b> <span class="ml-2 text-primary"> #{{ detail.id }}</span>
+                        <b>Campaign Reference Number:</b> <span class="ml-2 text-primary"> #{{ detail.ref_no }}</span>
                     </div>
                 </VCol>
             </VRow>
@@ -92,6 +93,7 @@
         <SubmitDialog 
             :isDialogVisible="isDialogVisible"
             @close-dialog="closeSubmitDialog"
+            @update-record="updateDetailRefNumber"
         />
     </VCard>
 </template>
@@ -185,10 +187,23 @@ const update = () => {
     progressStatus = categories.value.find(item => item.value == progressStatus).title
     progressSubStatus = sub_categories.value.find(item => item.value == progressSubStatus).title
 
-    axios.put(`/campaign-detail/${id}`, {
+    axios.put(`/campaign-detail/${id}/status`, {
         progressStatus, 
         progressSubStatus, 
         campaignAgentRemark
+    })
+        .then(res => {
+            const { status } = res.data
+            if (status == 'success') {
+                isSuccess.value = true
+            }
+        })
+}
+
+const updateDetailRefNumber = (ref_no) => {
+    isDialogVisible.value = false
+    axios.put(`/campaign-detail/${id}/ref-number`, {
+        ref_no
     })
         .then(res => {
             const { status } = res.data

@@ -136,30 +136,6 @@ const adminLogin = () => {
                 </VBtn>
               </VCol>
 
-              <VCol
-                cols="12"
-                class="d-flex align-center"
-              >
-                <VDivider />
-
-                <span class="mx-4">or</span>
-
-                <VDivider />
-              </VCol>
-
-              <!-- auth providers -->
-              <VCol
-                cols="12"
-                class="text-center"
-              >
-                <VBtn
-                  color="warning"
-                  block
-                  @click="adminLogin"
-                >
-                  Admin Login
-                </VBtn>
-              </VCol>
             </VRow>
             
         </VCardText>
