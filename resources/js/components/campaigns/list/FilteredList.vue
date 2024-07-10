@@ -61,7 +61,7 @@ const data = toRef(props, 'data')
 
 const options = ref(tableOption)
 
-const goToDetail = (item) => {
-  router.push(`/campaign-detail/${item.id}`)
+const goToDetail = (evt, row) => {
+  router.push(`/campaign-detail/${row.item.raw.id}`)
 }
 </script>

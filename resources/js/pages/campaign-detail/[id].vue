@@ -29,6 +29,7 @@
                     cols="4" 
                     v-for="(item, idx) in tableHeader" 
                     :key="idx"
+                    v-if="detail != undefined"
                     class="d-flex justify-between">
                     <div class="font-weight-bold text-sm">{{item.title }}:</div> 
                     <div>{{ detail[item.key] || '--' }}</div>

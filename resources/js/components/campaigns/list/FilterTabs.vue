@@ -81,7 +81,7 @@ const setFilter = (label, sitem) => {
     align-items: center;
     margin-block-start: -10px;
     padding: 10px;
-    background-color: #f4f4f4;
+    background-color: rgba(var(--v-theme-warning), 0.4) !important;
     border-radius: 10px;
 }
 .custom__badge .v-badge__badge {
